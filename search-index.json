@@ -1,1 +1,45 @@
+name: Update Search Index
 
+on:
+  push:
+    paths:
+      - 'packages/**/package.json'
+
+jobs:
+  update-index:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build search index from all package.json files
+        run: |
+          python3 -c "
+          import json, glob
+
+          pkgs = []
+          for f in sorted(glob.glob('packages/**/package.json', recursive=True)):
+              with open(f, encoding='utf-8') as fp:
+                  data = json.load(fp)
+                  # Only keep the fields the app needs
+                  pkgs.append({
+                      'Name':        data.get('Name', ''),
+                      'Version':     data.get('Version', ''),
+                      'Description': data.get('Description', ''),
+                      'Author':      data.get('Author', ''),
+                      'License':     data.get('License', ''),
+                      'Security':    data.get('Security', 'unverified'),
+                  })
+
+          with open('search-index.json', 'w', encoding='utf-8') as out:
+              json.dump(pkgs, out, indent=2, ensure_ascii=False)
+
+          print(f'Indexed {len(pkgs)} package(s)')
+          "
+
+      - name: Commit updated index
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add search-index.json
+          git diff --staged --quiet || git commit -m "chore: auto-update search-index.json"
+          git push
