@@ -1,1 +1,22 @@
-
+{
+  "Name": "hello-decovius",
+  "Version": "1.0.0",
+  "Description": "Ein Beispiel-Paket für die Decovius Registry",
+  "Author": "dein-github-name",
+  "License": "MIT",
+  "Security": "verified",
+  "Requirements": {
+    "node": {
+      "kind": "tool",
+      "command": "node",
+      "version_arg": "--version",
+      "mandatory": false
+    },
+    "registry": {
+      "kind": "network",
+      "host": "github.io",
+      "port": 443,
+      "mandatory": true
+    }
+  }
+}
