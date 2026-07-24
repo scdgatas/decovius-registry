@@ -1,1 +1,17 @@
+[policy]
+priority = ["local", "remote", "self"]
+retry = 2
+healthcheck_interval_secs = 60
 
+[local]
+path = "C:/Users/DEIN-NAME/AppData/Local/Decovius/registry"
+
+[[remote]]
+name    = "primary"
+url     = "https://DEIN-USERNAME.github.io/decovius-registry"
+trusted = true
+
+[[remote]]
+name    = "mirror-eu"
+url     = "https://eu.registry.decovius.io"
+trusted = true
